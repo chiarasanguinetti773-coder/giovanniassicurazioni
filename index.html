@@ -516,17 +516,29 @@ const CONFIG = {
   const box=$("#installBox"), btn=$("#installBtn"), hint=$("#installHint");
   const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
   let deferred = null;
+  const canShow = ()=> !standalone && !sessionStorage.getItem("installClosed");
 
-  if (!standalone && !sessionStorage.getItem("installClosed")) {
-    if (isIOS) {
-      hint.textContent = "Tocca Condividi ↑ poi «Aggiungi a Home»";
-      btn.style.display = "none";
-      box.classList.add("show");
-    }
-    window.addEventListener("beforeinstallprompt", e=>{
-      e.preventDefault(); deferred = e; box.classList.add("show");
-    });
+  if (isIOS && canShow()) {
+    hint.textContent = "Tocca Condividi ↑ poi «Aggiungi a Home»";
+    btn.style.display = "none";
+    box.classList.add("show");
+  }
+  window.addEventListener("beforeinstallprompt", e=>{
+    e.preventDefault(); deferred = e;
+    btn.style.display = ""; hint.textContent = "Tienila sempre a portata sul telefono";
+    if (canShow()) box.classList.add("show");
+  });
+  // Fallback Android: se il prompt automatico non parte (o è Samsung Internet), mostra le istruzioni manuali
+  if (isAndroid) {
+    setTimeout(()=>{
+      if (!deferred && canShow()) {
+        btn.style.display = "none";
+        hint.textContent = "Menu del browser (⋮ o ☰) → «Installa app» o «Aggiungi a Home»";
+        box.classList.add("show");
+      }
+    }, 2500);
   }
   btn.addEventListener("click", async ()=>{
     if (!deferred) return;
