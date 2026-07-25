@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#16294A">
-<title>Giovanni Cutrupi · Assistenza sinistri</title>
+<title>Giovanni Cutrupi · Assistenza clienti</title>
 <meta name="description" content="Assistenza rapida in caso di sinistro: numeri utili, come compilare il CID e invio della denuncia di sinistro.">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/favicon.png" sizes="32x32">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -393,9 +393,10 @@ const CONFIG = {
   agentRole:   "Consulente assicurativo",
   agencyName:  "AFFIDABILITÀ",
   agencyTagline:"Esperienza, protezione, valore",
-  agentEmail:  "Giovanni.cutrupi81@gmail.com",   // ⬅️ EMAIL dove ricevere le denunce (OBBLIGATORIA)
+  agentEmail:  "TUA-EMAIL@esempio.it",   // ⬅️ EMAIL dove ricevere le denunce (OBBLIGATORIA)
   agentPhoneShow: "",
-  cidVideoId:  "",                       // ID video YouTube (dopo "watch?v="). Vuoto = placeholder
+  cidVideoFile: "copy_13B3FDA7-0F41-4346-8919-5D552374B498.mp4", // video caricato nel repo (ha la precedenza)
+  cidVideoId:  "",                       // in alternativa: ID YouTube (dopo "watch?v="). Lascia vuoto se usi il file sopra
   quoteTypes:  ["Auto","Moto","Casa e famiglia","Vita","Infortuni","Salute","Attività / Azienda","Altro"],
 
   // Toccando un bottone si APRE la lista dei numeri della compagnia. Il 1° è quello mostrato sul bottone.
@@ -432,7 +433,7 @@ const CONFIG = {
   $("#agentRole").textContent = CONFIG.agentRole;
   if (CONFIG.agencyName) $("#agencyName").textContent = CONFIG.agencyName; else $("#agencyName").parentElement.style.display="none";
   if (CONFIG.agencyTagline) $("#agencyTagline").textContent = CONFIG.agencyTagline; else $("#agencyTagline").style.display="none";
-  document.title = CONFIG.agentName + " · Assistenza sinistri";
+  document.title = CONFIG.agentName + " · Assistenza clienti";
   $("#foot").lastElementChild.textContent = CONFIG.agentName + " · " + CONFIG.agentRole;
   if (CONFIG.agentPhoneShow) $("#footContact").innerHTML = 'Recapito diretto: <a href="tel:'+CONFIG.agentPhoneShow.replace(/\s/g,'')+'">'+CONFIG.agentPhoneShow+'</a>';
 
@@ -464,7 +465,8 @@ const CONFIG = {
   document.addEventListener("keydown", e=>{ if(e.key==="Escape") document.querySelectorAll(".overlay.show").forEach(close); });
 
   // video
-  if (CONFIG.cidVideoId) $("#videoWrap").innerHTML = '<iframe src="https://www.youtube.com/embed/'+CONFIG.cidVideoId+'" title="Come compilare il CID" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  if (CONFIG.cidVideoFile) $("#videoWrap").innerHTML = '<video src="'+CONFIG.cidVideoFile+'" controls playsinline preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>';
+  else if (CONFIG.cidVideoId) $("#videoWrap").innerHTML = '<iframe src="https://www.youtube.com/embed/'+CONFIG.cidVideoId+'" title="Come compilare il CID" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 
   // allegati
   $("#allegati").addEventListener("change", e=>{ $("#fileNames").textContent = Array.from(e.target.files).map(f=>f.name).join(", "); });
